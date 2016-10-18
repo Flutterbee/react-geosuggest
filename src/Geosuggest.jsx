@@ -188,9 +188,7 @@ const Geosuggest = React.createClass({
    * Clear the input and close the suggestion pane
    */
   clear: function() {
-    this.setState({userInput: ''}, function() {
-      this.hideSuggests();
-    }.bind(this));
+    this.setState({userInput: ''});
     this.refs['geosuggestInput'].focus();
   },
 
@@ -523,30 +521,15 @@ const Geosuggest = React.createClass({
           location = gmaps.geometry.location;
         suggest.gmaps = gmaps;
 
-        if(suggest.gmaps.types.indexOf("sublocality_level_1")!=-1){
-          this.setState({
-            locality : suggest.gmaps.address_components[0].short_name,
-            userInput : '',
-            placeholder : 'Where in ' + suggest.gmaps.address_components[0].short_name + " ?",
-            location : location,
-            radius : 5000
-          });
-
-          this.refs['big-locality'].style['display'] = "block";
-          this.refs['geosuggestInput'].style['padding-left'] = (this.refs['big-locality'].offsetWidth+12 + 20) + "px";
-          this.refs['geosuggestInput'].focus();
-        } else {
-          this.setState({
-            userInput : suggest.label
-          });
-          suggest.location = {
-            lat: location.lat(),
-            lng: location.lng()
-          };
-          this.clearLocality();
-          this.props.onSuggestSelect(suggest);
-        }
-
+        this.setState({
+          userInput : suggest.label
+        });
+        suggest.location = {
+          lat: location.lat(),
+          lng: location.lng()
+        };
+        this.clearLocality();
+        this.props.onSuggestSelect(suggest);
       }.bind(this)
     );
   },
